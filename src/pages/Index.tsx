@@ -3,10 +3,12 @@ import { WelcomeScreen } from "@/components/WelcomeScreen";
 import { QuizScreen } from "@/components/QuizScreen";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { ResultsScreen } from "@/components/ResultsScreen";
-import { QuizAnswers, CostumeRecommendation } from "@/types/quiz";
+import { DetailScreen } from "@/components/DetailScreen";
+import { QuizAnswers, CostumeRecommendation, ImplementationGuide } from "@/types/quiz";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-type Stage = 'welcome' | 'quiz' | 'loading' | 'results';
+type Stage = 'welcome' | 'quiz' | 'loading' | 'results' | 'detail';
 
 const Index = () => {
   const [stage, setStage] = useState<Stage>('welcome');
@@ -14,6 +16,9 @@ const Index = () => {
   const [recommendations, setRecommendations] = useState<CostumeRecommendation[]>([]);
   const [savedCostumes, setSavedCostumes] = useState<string[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedCostume, setSelectedCostume] = useState<CostumeRecommendation | null>(null);
+  const [costumeGuide, setCostumeGuide] = useState<ImplementationGuide | null>(null);
+  const [isLoadingGuide, setIsLoadingGuide] = useState(false);
 
   const handleStartQuiz = () => {
     setStage('quiz');
@@ -24,46 +29,22 @@ const Index = () => {
     setStage('loading');
     
     try {
-      // TODO: Replace with actual API call to backend edge function
-      await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate API call
-      
-      // Mock data for now
-      const mockRecommendations: CostumeRecommendation[] = [
-        {
-          name: "Miles Morales Spider-Man",
-          description: "Black suit with red web pattern, red and black sneakers, spray-painted spider logo on chest. Iconic look from Into the Spider-Verse.",
-          imageSearch: "Miles Morales Spider-Man costume Into the Spider-Verse",
-          why: "Perfect blend of pop culture and creative style with a modern superhero twist",
-          difficulty: "Medium",
-          cost: "$45-65",
-          time: "4-6 hours",
-          category: "pop-culture"
-        },
-        {
-          name: "Wednesday Addams",
-          description: "Black dress with white collar, long black braided pigtails, deadpan expression. The iconic gothic character from The Addams Family.",
-          imageSearch: "Wednesday Addams costume Netflix",
-          why: "Classic spooky aesthetic that's trending in 2025",
-          difficulty: "Easy",
-          cost: "$30-50",
-          time: "2-3 hours",
-          category: "classic"
-        },
-        {
-          name: "Princess Peach",
-          description: "Pink floor-length ball gown with puffy sleeves, gold crown with red gems, long blonde hair, white gloves. The beloved Nintendo princess.",
-          imageSearch: "Princess Peach costume Super Mario",
-          why: "Glamorous and recognizable, perfect for gaming fans",
-          difficulty: "Hard",
-          cost: "$80-120",
-          time: "8-10 hours",
-          category: "pop-culture"
+      const { data, error } = await supabase.functions.invoke('generate-costumes', {
+        body: { 
+          answers,
+          previousSuggestions: recommendations.map(r => r.name)
         }
-      ];
-      
-      setRecommendations(mockRecommendations);
-      setStage('results');
-      toast.success("Your costumes are ready! 🎃");
+      });
+
+      if (error) throw error;
+
+      if (data?.costumes && Array.isArray(data.costumes)) {
+        setRecommendations(data.costumes);
+        setStage('results');
+        toast.success("Your costumes are ready! 🎃");
+      } else {
+        throw new Error("Invalid response format");
+      }
     } catch (error) {
       console.error('Error generating recommendations:', error);
       toast.error("Oops! Something went wrong. Please try again.");
@@ -74,9 +55,21 @@ const Index = () => {
   const handleGenerateMore = async () => {
     setIsGenerating(true);
     try {
-      // TODO: Implement actual API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      toast.success("Generated 5 more costume ideas!");
+      const { data, error } = await supabase.functions.invoke('generate-costumes', {
+        body: { 
+          answers: quizAnswers,
+          previousSuggestions: recommendations.map(r => r.name)
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.costumes && Array.isArray(data.costumes)) {
+        setRecommendations([...recommendations, ...data.costumes]);
+        toast.success("Generated 5 more costume ideas!");
+      } else {
+        throw new Error("Invalid response format");
+      }
     } catch (error) {
       console.error('Error generating more:', error);
       toast.error("Failed to generate more costumes. Please try again.");
@@ -93,9 +86,39 @@ const Index = () => {
     );
   };
 
-  const handleSelectCostume = (costume: CostumeRecommendation) => {
-    // TODO: Implement detail screen with implementation guides
-    toast.info("Implementation guide coming soon!");
+  const handleSelectCostume = async (costume: CostumeRecommendation) => {
+    setSelectedCostume(costume);
+    setIsLoadingGuide(true);
+    setStage('loading');
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-guide', {
+        body: {
+          costume: {
+            name: costume.name,
+            description: costume.description
+          },
+          approach: quizAnswers.approach || 'hybrid',
+          budget: quizAnswers.budget || 'medium'
+        }
+      });
+
+      if (error) throw error;
+
+      if (data) {
+        setCostumeGuide(data);
+        setStage('detail');
+        toast.success("Implementation guide ready!");
+      } else {
+        throw new Error("Invalid response format");
+      }
+    } catch (error) {
+      console.error('Error generating guide:', error);
+      toast.error("Failed to generate guide. Please try again.");
+      setStage('results');
+    } finally {
+      setIsLoadingGuide(false);
+    }
   };
 
   const handleBackToWelcome = () => {
@@ -103,10 +126,18 @@ const Index = () => {
     setQuizAnswers({});
     setRecommendations([]);
     setSavedCostumes([]);
+    setSelectedCostume(null);
+    setCostumeGuide(null);
   };
 
   const handleBackToQuiz = () => {
     setStage('quiz');
+  };
+
+  const handleBackToResults = () => {
+    setStage('results');
+    setSelectedCostume(null);
+    setCostumeGuide(null);
   };
 
   return (
@@ -123,6 +154,13 @@ const Index = () => {
           onGenerateMore={handleGenerateMore}
           onBack={handleBackToQuiz}
           isGenerating={isGenerating}
+        />
+      )}
+      {stage === 'detail' && selectedCostume && costumeGuide && (
+        <DetailScreen
+          costume={selectedCostume}
+          guide={costumeGuide}
+          onBack={handleBackToResults}
         />
       )}
     </>
