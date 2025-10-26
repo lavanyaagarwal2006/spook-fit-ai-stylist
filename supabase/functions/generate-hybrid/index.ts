@@ -12,16 +12,16 @@ serve(async (req) => {
   }
 
   try {
-    const { userProfile, costumeDatabase, excludeNames = [], count = 5 } = await req.json();
+    const { userProfile, costumeDatabase, excludeNames = [], count = 20 } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    // Calculate split: 60% database, 40% generated
-    const databaseCount = Math.ceil(count * 0.6); // 3 for count=5
-    const generatedCount = count - databaseCount; // 2 for count=5
+    // Calculate split: 60% database, 40% generated (12 + 8 for count=20, 6 + 4 for count=10)
+    const databaseCount = Math.ceil(count * 0.6);
+    const generatedCount = count - databaseCount;
 
     console.log(`Hybrid generation: ${databaseCount} from database, ${generatedCount} generated`);
 
@@ -35,12 +35,9 @@ USER PROFILE:
 - Gender: ${userProfile.gender}
 - Styles: ${(userProfile.style || []).join(', ')}
 - Budget: ${userProfile.budget}
-- Time: ${userProfile.time}
 - Approach: ${userProfile.approach}
 - DETAILED INTERESTS (150+ specific options): ${detailedInterests}
-- Specific interests text: "${userProfile.specific_interests || ''}"
-- General hobbies: "${userProfile.general_interests || ''}"
-- Past: "${userProfile.past || ''}"
+- Past: "${userProfile.past || 'Not provided'}"
 
 CRITICAL: Prioritize matching the DETAILED INTERESTS - these are specific franchises, characters, and topics the user selected.
     `.trim();
@@ -220,7 +217,6 @@ Return ${generatedCount} truly creative, personalized ideas.`;
 
 User Profile:
 - Budget: ${userProfile.budget}
-- Time available: ${userProfile.time}
 - Approach: ${userProfile.approach}
 
 Selected Costumes:
@@ -243,10 +239,10 @@ For EACH costume, provide:
    - Budget "high" + "diy" = $40-70
    - Budget "unlimited" = $100-200+
 
-3. **Time Estimate** based on time:
-   - "rushed" = Maximum 2-3 hours
-   - "moderate" = 3-6 hours
-   - "plenty" = 5-15 hours
+3. **Time Estimate**:
+   - "Easy" = 1-3 hours
+   - "Medium" = 3-6 hours
+   - "Hard" = 5-15 hours
 
 4. **Difficulty**:
    - Easy = Buy complete OR very simple DIY

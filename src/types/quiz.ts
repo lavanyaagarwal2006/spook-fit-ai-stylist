@@ -4,6 +4,8 @@ export interface QuizQuestion {
   type: 'single' | 'multi-select' | 'text' | 'enhanced-interests';
   options?: QuizOption[];
   placeholder?: string;
+  skippable?: boolean;
+  skipLabel?: string;
 }
 
 export interface QuizOption {

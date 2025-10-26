@@ -32,36 +32,22 @@ const Index = () => {
     try {
       const previousNames = recommendations.map(r => r.name);
       
-      // Phase 1: AI matches user profile to database
-      const { data: matchData, error: matchError } = await supabase.functions.invoke('match-costumes', {
+      // Hybrid AI system: 12 from database + 8 generated = 20 costumes
+      const { data: functionData, error: functionError } = await supabase.functions.invoke('generate-hybrid', {
         body: { 
           userProfile: answers,
           costumeDatabase,
           excludeNames: previousNames,
-          count: 5
+          count: 20
         }
       });
 
-      if (matchError) throw matchError;
+      if (functionError) throw functionError;
 
-      if (!matchData?.costumes || matchData.costumes.length === 0) {
-        throw new Error("No matches found");
-      }
-
-      // Phase 2: AI enhances with visual details
-      const { data: enhanceData, error: enhanceError } = await supabase.functions.invoke('enhance-costumes', {
-        body: { 
-          costumes: matchData.costumes,
-          userProfile: answers
-        }
-      });
-
-      if (enhanceError) throw enhanceError;
-
-      if (enhanceData?.costumes && Array.isArray(enhanceData.costumes)) {
-        setRecommendations(enhanceData.costumes);
+      if (functionData?.recommendations && Array.isArray(functionData.recommendations)) {
+        setRecommendations(functionData.recommendations);
         setStage('results');
-        toast.success("Your costumes are ready! 🎃");
+        toast.success("Your 20 costumes are ready! 🎃");
       } else {
         throw new Error("Invalid response format");
       }
@@ -94,35 +80,21 @@ const Index = () => {
     try {
       const previousNames = recommendations.map(r => r.name);
       
-      // Phase 1: AI matches
-      const { data: matchData, error: matchError } = await supabase.functions.invoke('match-costumes', {
+      // Generate 10 more costumes (6 database + 4 generated)
+      const { data: functionData, error: functionError } = await supabase.functions.invoke('generate-hybrid', {
         body: { 
           userProfile: quizAnswers,
           costumeDatabase,
           excludeNames: previousNames,
-          count: 5
+          count: 10
         }
       });
 
-      if (matchError) throw matchError;
+      if (functionError) throw functionError;
 
-      if (!matchData?.costumes || matchData.costumes.length === 0) {
-        throw new Error("No new matches found");
-      }
-
-      // Phase 2: AI enhances
-      const { data: enhanceData, error: enhanceError } = await supabase.functions.invoke('enhance-costumes', {
-        body: { 
-          costumes: matchData.costumes,
-          userProfile: quizAnswers
-        }
-      });
-
-      if (enhanceError) throw enhanceError;
-
-      if (enhanceData?.costumes && Array.isArray(enhanceData.costumes)) {
-        setRecommendations([...recommendations, ...enhanceData.costumes]);
-        toast.success("Generated 5 more costume ideas!");
+      if (functionData?.recommendations && Array.isArray(functionData.recommendations)) {
+        setRecommendations([...recommendations, ...functionData.recommendations]);
+        toast.success("Generated 10 more costume ideas!");
       } else {
         throw new Error("Invalid response format");
       }

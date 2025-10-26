@@ -47,47 +47,17 @@ export const quizQuestions: QuizQuestion[] = [
     ]
   },
   {
-    id: 'time',
-    question: "How much time do you have?",
-    type: 'single',
-    options: [
-      { value: 'rushed', label: 'Last minute (1-2 days)', emoji: '⚡' },
-      { value: 'moderate', label: 'About a week', emoji: '📅' },
-      { value: 'plenty', label: 'Plenty (2+ weeks)', emoji: '🗓️' }
-    ]
-  },
-  {
-    id: 'group',
-    question: "Who's dressing up?",
-    type: 'single',
-    options: [
-      { value: 'solo', label: 'Just me', emoji: '🧍' },
-      { value: 'couple', label: 'Me and a partner', emoji: '👫' },
-      { value: 'group', label: 'Group/family', emoji: '👨‍👩‍👧‍👦' }
-    ]
-  },
-  {
     id: 'interests',
     question: "What are you into? (Select all that apply)",
     type: 'enhanced-interests',
-    options: [] // This will use the EnhancedInterestsQuestion component
-  },
-  {
-    id: 'specific_interests',
-    question: "Tell us more about your specific interests",
-    type: 'text',
-    placeholder: "e.g., 'Marvel movies, hip-hop music, football' or 'K-pop, retro gaming, Attack on Titan'"
-  },
-  {
-    id: 'general_interests',
-    question: "What are your hobbies in general?",
-    type: 'text',
-    placeholder: "e.g., 'Football, technology, traveling, cooking, photography'"
+    options: []
   },
   {
     id: 'past',
     question: "Any costumes you've loved or want to avoid?",
     type: 'text',
-    placeholder: "e.g., 'Last year I was a witch and loved it' or 'No masks please'"
+    placeholder: "e.g., 'Last year I was a witch and loved it' or 'No masks please'",
+    skippable: true,
+    skipLabel: "Skip this question"
   }
 ];

@@ -50,7 +50,17 @@ export const QuizScreen = ({ onComplete, onBack }: QuizScreenProps) => {
     }
   };
 
+  const handleSkip = () => {
+    setAnswers({ ...answers, [question.id]: '' });
+    if (isLastQuestion) {
+      onComplete(answers);
+    } else {
+      setCurrentQuestion(currentQuestion + 1);
+    }
+  };
+
   const canProceed = () => {
+    if (question.skippable) return true;
     const answer = answers[question.id];
     if (question.type === 'multi-select' || question.type === 'enhanced-interests') {
       return Array.isArray(answer) && answer.length > 0;
@@ -74,6 +84,9 @@ export const QuizScreen = ({ onComplete, onBack }: QuizScreenProps) => {
         <div className="bg-card/50 backdrop-blur-sm border border-border rounded-3xl p-8 md:p-12 shadow-[0_10px_40px_hsl(0_0%_0%/0.4)]">
           <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             {question.question}
+            {question.skippable && (
+              <span className="text-base font-normal text-muted-foreground ml-2">(Optional)</span>
+            )}
           </h2>
 
           <div className="space-y-4">
@@ -147,15 +160,28 @@ export const QuizScreen = ({ onComplete, onBack }: QuizScreenProps) => {
             Back
           </Button>
 
-          <Button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            size="lg"
-            className="bg-gradient-to-r from-primary to-secondary hover:from-primary-glow hover:to-secondary-glow text-primary-foreground rounded-2xl shadow-[0_0_20px_hsl(271_91%_65%/0.3)] hover:shadow-[0_0_40px_hsl(271_91%_65%/0.5)] transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-          >
-            {isLastQuestion ? 'Get My Costumes' : 'Next'}
-            {!isLastQuestion && <ChevronRight className="w-5 h-5 ml-2" />}
-          </Button>
+          <div className="flex gap-3">
+            {question.skippable && (
+              <Button
+                onClick={handleSkip}
+                variant="ghost"
+                size="lg"
+                className="rounded-2xl text-muted-foreground hover:text-foreground"
+              >
+                {question.skipLabel || 'Skip'}
+              </Button>
+            )}
+            
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              size="lg"
+              className="bg-gradient-to-r from-primary to-secondary hover:from-primary-glow hover:to-secondary-glow text-primary-foreground rounded-2xl shadow-[0_0_20px_hsl(271_91%_65%/0.3)] hover:shadow-[0_0_40px_hsl(271_91%_65%/0.5)] transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              {isLastQuestion ? 'Get My Costumes' : 'Next'}
+              {!isLastQuestion && <ChevronRight className="w-5 h-5 ml-2" />}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
