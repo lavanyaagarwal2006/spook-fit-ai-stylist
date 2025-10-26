@@ -24,7 +24,7 @@ Every Halloween, millions struggle with:
 - Finding options within budget
 - Avoiding costumes they've done before
 
-## ✨ The Solution
+##  The Solution
 
 SpookFit uses AI to provide **personalized, character-specific Halloween costume recommendations** with detailed implementation guides. Unlike generic costume suggestion apps, SpookFit:
 
@@ -93,23 +93,6 @@ SpookFit uses AI to provide **personalized, character-specific Halloween costume
 Two main edge functions:
 1. `generate-costumes` - Generates 20 personalized costume recommendations
 2. `generate-guide` - Creates detailed buy/DIY implementation guides
-
-
-## 🛠️ Installation & Setup
-
-```bash
-# Clone the repository
-git clone <your-repo-url>
-cd spookfit
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The app will be available at `http://localhost:8080`
 
 ## How to Use
 
