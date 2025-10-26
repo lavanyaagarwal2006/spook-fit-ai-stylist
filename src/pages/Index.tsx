@@ -7,6 +7,7 @@ import { DetailScreen } from "@/components/DetailScreen";
 import { QuizAnswers, CostumeRecommendation, ImplementationGuide } from "@/types/quiz";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { costumeDatabase } from "@/data/costumeDatabase";
 
 type Stage = 'welcome' | 'quiz' | 'loading' | 'results' | 'detail';
 
@@ -29,17 +30,36 @@ const Index = () => {
     setStage('loading');
     
     try {
-      const { data, error } = await supabase.functions.invoke('generate-costumes', {
+      const previousNames = recommendations.map(r => r.name);
+      
+      // Phase 1: AI matches user profile to database
+      const { data: matchData, error: matchError } = await supabase.functions.invoke('match-costumes', {
         body: { 
-          answers,
-          previousSuggestions: recommendations.map(r => r.name)
+          userProfile: answers,
+          costumeDatabase,
+          excludeNames: previousNames,
+          count: 5
         }
       });
 
-      if (error) throw error;
+      if (matchError) throw matchError;
 
-      if (data?.costumes && Array.isArray(data.costumes)) {
-        setRecommendations(data.costumes);
+      if (!matchData?.costumes || matchData.costumes.length === 0) {
+        throw new Error("No matches found");
+      }
+
+      // Phase 2: AI enhances with visual details
+      const { data: enhanceData, error: enhanceError } = await supabase.functions.invoke('enhance-costumes', {
+        body: { 
+          costumes: matchData.costumes,
+          userProfile: answers
+        }
+      });
+
+      if (enhanceError) throw enhanceError;
+
+      if (enhanceData?.costumes && Array.isArray(enhanceData.costumes)) {
+        setRecommendations(enhanceData.costumes);
         setStage('results');
         toast.success("Your costumes are ready! 🎃");
       } else {
@@ -48,24 +68,60 @@ const Index = () => {
     } catch (error) {
       console.error('Error generating recommendations:', error);
       toast.error("Oops! Something went wrong. Please try again.");
-      setStage('quiz');
+      
+      // Simple fallback
+      const genderFiltered = (costumeDatabase as any[])
+        .filter(c => answers.gender === 'any' || c.genders.includes(answers.gender as string))
+        .slice(0, 5)
+        .map(costume => ({
+          ...costume,
+          description: `Classic ${costume.name} costume from ${costume.source}.`,
+          cost: '$30-60',
+          time: '3-5 hours',
+          difficulty: 'Medium',
+          imageSearch: `${costume.name} costume`,
+          category: 'pop-culture',
+          why: 'Great costume choice!'
+        }));
+      
+      setRecommendations(genderFiltered as CostumeRecommendation[]);
+      setStage('results');
     }
   };
 
   const handleGenerateMore = async () => {
     setIsGenerating(true);
     try {
-      const { data, error } = await supabase.functions.invoke('generate-costumes', {
+      const previousNames = recommendations.map(r => r.name);
+      
+      // Phase 1: AI matches
+      const { data: matchData, error: matchError } = await supabase.functions.invoke('match-costumes', {
         body: { 
-          answers: quizAnswers,
-          previousSuggestions: recommendations.map(r => r.name)
+          userProfile: quizAnswers,
+          costumeDatabase,
+          excludeNames: previousNames,
+          count: 5
         }
       });
 
-      if (error) throw error;
+      if (matchError) throw matchError;
 
-      if (data?.costumes && Array.isArray(data.costumes)) {
-        setRecommendations([...recommendations, ...data.costumes]);
+      if (!matchData?.costumes || matchData.costumes.length === 0) {
+        throw new Error("No new matches found");
+      }
+
+      // Phase 2: AI enhances
+      const { data: enhanceData, error: enhanceError } = await supabase.functions.invoke('enhance-costumes', {
+        body: { 
+          costumes: matchData.costumes,
+          userProfile: quizAnswers
+        }
+      });
+
+      if (enhanceError) throw enhanceError;
+
+      if (enhanceData?.costumes && Array.isArray(enhanceData.costumes)) {
+        setRecommendations([...recommendations, ...enhanceData.costumes]);
         toast.success("Generated 5 more costume ideas!");
       } else {
         throw new Error("Invalid response format");
