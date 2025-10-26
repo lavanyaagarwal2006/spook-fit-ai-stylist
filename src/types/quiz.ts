@@ -1,7 +1,7 @@
 export interface QuizQuestion {
   id: string;
   question: string;
-  type: 'single' | 'multi-select' | 'text';
+  type: 'single' | 'multi-select' | 'text' | 'enhanced-interests';
   options?: QuizOption[];
   placeholder?: string;
 }

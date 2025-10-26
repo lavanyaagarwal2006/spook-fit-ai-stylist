@@ -26,6 +26,10 @@ serve(async (req) => {
     console.log(`Hybrid generation: ${databaseCount} from database, ${generatedCount} generated`);
 
     // STEP 1: Match from database using AI
+    const detailedInterests = Array.isArray(userProfile.interests) && userProfile.interests.length > 0
+      ? userProfile.interests.join(', ')
+      : 'Not provided';
+    
     const userSummary = `
 USER PROFILE:
 - Gender: ${userProfile.gender}
@@ -33,10 +37,12 @@ USER PROFILE:
 - Budget: ${userProfile.budget}
 - Time: ${userProfile.time}
 - Approach: ${userProfile.approach}
-- Broad interests: ${(userProfile.interests || []).join(', ')}
-- Specific interests: "${userProfile.specific_interests || ''}"
+- DETAILED INTERESTS (150+ specific options): ${detailedInterests}
+- Specific interests text: "${userProfile.specific_interests || ''}"
 - General hobbies: "${userProfile.general_interests || ''}"
 - Past: "${userProfile.past || ''}"
+
+CRITICAL: Prioritize matching the DETAILED INTERESTS - these are specific franchises, characters, and topics the user selected.
     `.trim();
 
     const availableCostumes = costumeDatabase

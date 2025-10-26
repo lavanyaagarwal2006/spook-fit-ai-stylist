@@ -69,17 +69,8 @@ export const quizQuestions: QuizQuestion[] = [
   {
     id: 'interests',
     question: "What are you into? (Select all that apply)",
-    type: 'multi-select',
-    options: [
-      { value: 'movies', label: 'Movies & TV', emoji: '🎬' },
-      { value: 'gaming', label: 'Video Games', emoji: '🎮' },
-      { value: 'anime', label: 'Anime & Manga', emoji: '🎌' },
-      { value: 'history', label: 'History & Period', emoji: '🏛️' },
-      { value: 'animals', label: 'Animals & Nature', emoji: '🦁' },
-      { value: 'fantasy', label: 'Fantasy & Magic', emoji: '🧙' },
-      { value: 'scifi', label: 'Sci-Fi & Space', emoji: '🚀' },
-      { value: 'music', label: 'Music & Artists', emoji: '🎵' }
-    ]
+    type: 'enhanced-interests',
+    options: [] // This will use the EnhancedInterestsQuestion component
   },
   {
     id: 'specific_interests',

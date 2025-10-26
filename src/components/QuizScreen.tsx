@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { QuizQuestion, QuizAnswers } from "@/types/quiz";
 import { quizQuestions } from "@/data/quizQuestions";
 import { cn } from "@/lib/utils";
+import { EnhancedInterestsQuestion } from "@/components/EnhancedInterestsQuestion";
 
 interface QuizScreenProps {
   onComplete: (answers: QuizAnswers) => void;
@@ -51,7 +52,7 @@ export const QuizScreen = ({ onComplete, onBack }: QuizScreenProps) => {
 
   const canProceed = () => {
     const answer = answers[question.id];
-    if (question.type === 'multi-select') {
+    if (question.type === 'multi-select' || question.type === 'enhanced-interests') {
       return Array.isArray(answer) && answer.length > 0;
     }
     return answer && answer.toString().trim().length > 0;
@@ -122,6 +123,13 @@ export const QuizScreen = ({ onComplete, onBack }: QuizScreenProps) => {
                 value={(answers[question.id] as string) || ""}
                 onChange={(e) => handleAnswer(e.target.value)}
                 className="min-h-[120px] text-lg border-2 bg-card/30 focus:border-primary rounded-2xl resize-none"
+              />
+            )}
+
+            {question.type === 'enhanced-interests' && (
+              <EnhancedInterestsQuestion
+                selectedInterests={(answers[question.id] as string[]) || []}
+                onSelectionChange={(interests) => setAnswers({ ...answers, [question.id]: interests })}
               />
             )}
           </div>
