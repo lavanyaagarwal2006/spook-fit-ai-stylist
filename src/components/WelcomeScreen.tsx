@@ -45,7 +45,7 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
               <Clock className="w-8 h-8 mx-auto mb-3 text-accent" />
               <h3 className="font-semibold mb-2">Time-Saving</h3>
               <p className="text-sm text-muted-foreground">
-                Get personalized suggestions in seconds, not hours
+                Get personalized suggestions in seconds
               </p>
             </div>
           </div>
