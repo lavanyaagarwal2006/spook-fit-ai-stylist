@@ -7,14 +7,14 @@
 > **Personalized Halloween costume recommendations powered by AI**  
 > Solving the annual costume planning struggle with intelligent, character-specific suggestions
 
-## 🏆 Hackathon Information
+##  Hackathon Information
 
 - **Event:** Spookathon 2025 - OCC Ballroom
 - **Dates:** October 25-26, 2025
 - **Tracks:** Artificial Intelligence & Daily Life
-- **Team:** [Your Team Name]
+- **Team:** October's Very Own
 
-## 🎯 The Problem
+##  The Problem
 
 Every Halloween, millions struggle with:
 - Finding costume ideas that match their personality
@@ -28,14 +28,14 @@ Every Halloween, millions struggle with:
 
 SpookFit uses AI to provide **personalized, character-specific Halloween costume recommendations** with detailed implementation guides. Unlike generic costume suggestion apps, SpookFit:
 
-- 🎭 **Character-Specific:** Suggests actual characters (not "generic witch")
-- 🤖 **AI-Powered:** Deep understanding of interests and preferences
-- 📸 **Visual References:** Direct links to Google Images for each costume
-- 💰 **Budget-Conscious:** Options for every price range
-- 🛠️ **Implementation Guides:** Detailed buy/DIY instructions
-- ⏱️ **Time-Aware:** Matches suggestions to available time
+-  **Character-Specific:** Suggests actual characters (not "generic witch")
+-  **AI-Powered:** Deep understanding of interests and preferences
+-  **Visual References:** Direct links to Google Images for each costume
+-  **Budget-Conscious:** Options for every price range
+-  **Implementation Guides:** Detailed buy/DIY instructions
+-  **Time-Aware:** Matches suggestions to available time
 
-## 🚀 Key Features
+##  Key Features
 
 ### 1. Intelligent Onboarding
 - 9-question quiz capturing style, budget, interests, and constraints
@@ -81,77 +81,19 @@ SpookFit uses AI to provide **personalized, character-specific Halloween costume
 - **React Query** for state management
 - **Lucide React** for icons
 
-### Backend (Lovable Cloud)
+### Backend
 - **Supabase** for backend infrastructure
 - **Edge Functions** for serverless AI integration
 - **Lovable AI Gateway** for AI model access
-  - Google Gemini 2.5 Flash (default)
+  - Google Gemini 2.5 Flash
   - Structured JSON responses
   - Rate limiting & error handling
 
 ### AI Integration
 Two main edge functions:
-1. `generate-costumes` - Generates 5 personalized costume recommendations
+1. `generate-costumes` - Generates 20 personalized costume recommendations
 2. `generate-guide` - Creates detailed buy/DIY implementation guides
 
-### Design System
-- Deep purple primary (#8B5CF6) - mysterious elegance
-- Vibrant orange secondary (#FF6B35) - Halloween energy
-- Gold accents (#FFD700) - highlights
-- Custom gradients and animations
-- Smooth transitions and hover effects
-
-## 📊 Why This Will Win
-
-### 1. Technical Complexity ⭐⭐⭐⭐⭐
-- Multi-step AI pipeline with contextual understanding
-- Complex state management across multiple stages
-- Sophisticated prompt engineering for character-specific results
-- Real-time AI integration with fallback handling
-- Advanced React patterns (hooks, context, routing)
-
-### 2. Technological Execution ⭐⭐⭐⭐⭐
-- Heavy AI/ML usage as core functionality (not a gimmick)
-- Innovative approach: AI understands nuanced interests
-- Smart context management (remembers previous suggestions)
-- Production-ready architecture with proper error handling
-- Optimized API calls and response parsing
-
-### 3. Potential Impact ⭐⭐⭐⭐⭐
-- Solves a real annual problem millions face
-- Saves money (budget-conscious recommendations)
-- Saves time (instant vs. hours of browsing)
-- Reduces waste (informed buying decisions)
-- Makes Halloween accessible and affordable
-
-### 4. User Experience ⭐⭐⭐⭐⭐
-- Smooth, intuitive flow from quiz → recommendations → guide
-- Visual references make decision-making easy
-- No overwhelming options (5 at a time, generate more)
-- Halloween-themed but professional design
-- Mobile-first responsive
-
-### 5. Functionality ⭐⭐⭐⭐⭐
-- Fully functional end-to-end
-- Scalable architecture
-- Quality API integration
-- Handles edge cases and errors
-- Works flawlessly
-
-### 6. Presentation ⭐⭐⭐⭐⭐
-- Can demo full journey in 3 minutes
-- Visual appeal with Halloween aesthetic
-- Clear problem → solution narrative
-- Impressive AI results to showcase
-- Easy to explain value proposition
-
-## 🎨 Design Highlights
-
-- **Modern Premium Aesthetic:** Spotify-inspired gradients with Halloween colors
-- **Smooth Animations:** Float, glow-pulse, fade-in, scale-in effects
-- **Card-Based UI:** Clean, focused interactions
-- **Dark Theme:** Perfect for spooky season
-- **Semantic Design Tokens:** Consistent, reusable styling
 
 ## 🛠️ Installation & Setup
 
@@ -169,20 +111,15 @@ npm run dev
 
 The app will be available at `http://localhost:8080`
 
-## 🌐 Deployment
-
-This project is deployed on Lovable and can be accessed at:
-[Your Deployment URL]
-
-## 📱 How to Use
+## How to Use
 
 1. **Welcome Screen:** Click "Start Your Spooky Journey"
 2. **Quiz:** Answer 9 questions about your preferences
-3. **Results:** View 5 AI-generated costume recommendations
+3. **Results:** View 20 AI-generated costume recommendations
 4. **Details:** Click "Get Guide" for implementation instructions
 5. **Generate More:** Get 5 additional suggestions anytime
 
-## 🎯 Target Audience
+## Target Audience
 
 - Halloween enthusiasts of all ages
 - Last-minute costume seekers
@@ -191,7 +128,7 @@ This project is deployed on Lovable and can be accessed at:
 - Indecisive costume planners
 - Parents planning family costumes
 
-## 💡 Future Enhancements
+## Future Enhancements
 
 - Social sharing functionality
 - Costume history tracking
@@ -201,7 +138,7 @@ This project is deployed on Lovable and can be accessed at:
 - Community costume ratings
 - Photo upload for style matching
 
-## 🤝 Contributing
+## Contributing
 
 This is a hackathon project, but feedback and suggestions are welcome!
 
@@ -209,16 +146,10 @@ This is a hackathon project, but feedback and suggestions are welcome!
 
 MIT License - feel free to use this code for your own projects
 
-## 👥 Team
+## Team
 
-[Add your team members here]
+Dhruv Mantri, Lavanya Agarwal, Sara Khan
 
-## 🙏 Acknowledgments
-
-- Built for Spookathon 2025 at Orange Coast College
-- Hosted by Iota Xi Honor Society
-- Powered by Lovable Cloud and Lovable AI
-- UI components from Shadcn/ui
 
 ---
 
