@@ -27,6 +27,26 @@ Deno.serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
+    // ✅ NEW: Fetch real products from shopping API in parallel with AI guide generation
+    const fetchProductsPromise = fetch(
+      `${Deno.env.get('SUPABASE_URL')}/functions/v1/fetch-products`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': req.headers.get('Authorization') || '',
+        },
+        body: JSON.stringify({
+          costumeName: costume.name,
+          budget: budget,
+          approach: approach
+        })
+      }
+    ).then(res => res.json()).catch(err => {
+      console.error('Failed to fetch products:', err);
+      return { products: null, usedAPI: false };
+    });
+
     const systemPrompt = `You are a Halloween costume implementation expert. Generate detailed guides for creating specific character costumes.
 
 Respond ONLY with valid JSON in this exact format:
@@ -58,7 +78,7 @@ User's Budget: ${budget}
 
 Generate a comprehensive implementation guide with both buy and DIY paths. For the buy path, list 5-7 specific items needed with prices and where to buy them. For the DIY path, provide materials list, 6-8 step-by-step instructions, tools needed, and cost estimates. Include character-specific tips for both paths.`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const aiPromise = fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
@@ -73,6 +93,9 @@ Generate a comprehensive implementation guide with both buy and DIY paths. For t
         response_format: { type: "json_object" },
       }),
     });
+
+    // ✅ Wait for both API calls in parallel
+    const [response, productsData] = await Promise.all([aiPromise, fetchProductsPromise]);
 
     if (!response.ok) {
       if (response.status === 429) {
@@ -100,7 +123,30 @@ Generate a comprehensive implementation guide with both buy and DIY paths. For t
     }
 
     const parsed = JSON.parse(content);
-    
+
+    // ✅ NEW: Replace AI-generated items with real products if available
+    if (productsData?.products && productsData.products.length > 0) {
+      console.log(`Using ${productsData.products.length} real products from shopping API`);
+
+      // Calculate total cost from real products
+      const totalCost = productsData.products.reduce((sum: number, item: any) => {
+        const price = parseFloat(item.price.replace(/[^0-9.]/g, '')) || 0;
+        return sum + price;
+      }, 0);
+
+      // Replace buy path items with real products
+      parsed.buyPath.items = productsData.products;
+      parsed.buyPath.totalCost = `$${totalCost.toFixed(2)}`;
+
+      // Add a note that these are real products
+      parsed.buyPath.realProducts = true;
+
+      console.log(`Total cost from real products: $${totalCost.toFixed(2)}`);
+    } else {
+      console.log('Using AI-generated product suggestions (no real products found)');
+      parsed.buyPath.realProducts = false;
+    }
+
     return new Response(JSON.stringify(parsed), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

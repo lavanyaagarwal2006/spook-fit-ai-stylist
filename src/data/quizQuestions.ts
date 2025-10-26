@@ -30,10 +30,10 @@ export const quizQuestions: QuizQuestion[] = [
     question: "What's your budget?",
     type: 'single',
     options: [
-      { value: 'low', label: 'Under $30', emoji: '💵' },
-      { value: 'medium', label: '$30 - $75', emoji: '💰' },
-      { value: 'high', label: '$75 - $150', emoji: '💎' },
-      { value: 'unlimited', label: '$150+', emoji: '🤑' }
+      { value: '<$30', label: '<$30', emoji: '💵' },
+      { value: '$30-60', label: '$30-60', emoji: '💰' },
+      { value: '$60-100', label: '$60-100', emoji: '💎' },
+      { value: '$100+', label: '$100+', emoji: '🤑' }
     ]
   },
   {

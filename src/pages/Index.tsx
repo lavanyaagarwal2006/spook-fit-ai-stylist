@@ -70,13 +70,20 @@ const Index = () => {
       toast.error("Oops! Something went wrong. Please try again.");
       
       // Simple fallback
+      const budgetMap: { [key: string]: string } = {
+        '<$30': '$20-30',
+        '$30-60': '$35-55',
+        '$60-100': '$65-95',
+        '$100+': '$100-150'
+      };
+
       const genderFiltered = (costumeDatabase as any[])
         .filter(c => answers.gender === 'any' || c.genders.includes(answers.gender as string))
         .slice(0, 5)
         .map(costume => ({
           ...costume,
           description: `Classic ${costume.name} costume from ${costume.source}.`,
-          cost: '$30-60',
+          cost: budgetMap[answers.budget as string] || '$30-60',
           time: '3-5 hours',
           difficulty: 'Medium',
           imageSearch: `${costume.name} costume`,

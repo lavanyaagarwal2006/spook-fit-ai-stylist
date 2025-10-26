@@ -38,13 +38,13 @@ For EACH costume, provide:
    - What makes it instantly recognizable
 
 2. **Cost Estimate** based on user's budget and approach:
-   - Budget "low" + "buy" = $20-35
-   - Budget "low" + "diy" = $10-25
-   - Budget "medium" + "buy" = $40-70
-   - Budget "medium" + "diy" = $25-45
-   - Budget "high" + "buy" = $70-120
-   - Budget "high" + "diy" = $40-70
-   - Budget "unlimited" = $100-200+
+   - Budget "<$30" + "buy" = $20-30
+   - Budget "<$30" + "diy" = $10-25
+   - Budget "$30-60" + "buy" = $30-60
+   - Budget "$30-60" + "diy" = $20-45
+   - Budget "$60-100" + "buy" = $60-100
+   - Budget "$60-100" + "diy" = $35-75
+   - Budget "$100+" = $100-250+
 
 3. **Time Estimate** based on complexity and user's time:
    - "rushed" = Maximum 2-3 hours (ONLY simple costumes)
