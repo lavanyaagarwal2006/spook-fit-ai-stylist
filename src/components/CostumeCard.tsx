@@ -5,7 +5,7 @@ import { CostumeRecommendation } from "@/types/quiz";
 import { cn } from "@/lib/utils";
 
 interface CostumeCardProps {
-  costume: CostumeRecommendation;
+  costume: CostumeRecommendation & { source?: string };
   isSaved: boolean;
   onToggleSave: () => void;
   onSelect: () => void;
@@ -18,6 +18,20 @@ export const CostumeCard = ({ costume, isSaved, onToggleSave, onSelect }: Costum
 
   return (
     <Card className="group relative overflow-hidden bg-gradient-to-br from-card/80 to-card/50 backdrop-blur-sm border-2 border-border hover:border-primary transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_hsl(271_91%_65%/0.3)] rounded-3xl">
+      {/* Source Badge */}
+      {costume.source && (
+        <div className="absolute top-4 left-4 z-10">
+          <span className={cn(
+            "px-2 py-1 rounded-lg text-xs font-semibold backdrop-blur-sm",
+            costume.source === 'DATABASE' 
+              ? "bg-blue-500/80 text-white" 
+              : "bg-purple-500/80 text-white"
+          )}>
+            {costume.source === 'DATABASE' ? '📊 Database' : '✨ AI Created'}
+          </span>
+        </div>
+      )}
+      
       {/* Save Button */}
       <button
         onClick={(e) => {

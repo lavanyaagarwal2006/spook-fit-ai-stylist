@@ -184,7 +184,7 @@ Return the top ${count} matches, ordered by matchScore (highest first).`;
   } catch (error) {
     console.error('Error in match-costumes function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

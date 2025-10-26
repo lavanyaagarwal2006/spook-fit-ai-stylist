@@ -7,7 +7,7 @@ import { DetailScreen } from "@/components/DetailScreen";
 import { QuizAnswers, CostumeRecommendation, ImplementationGuide } from "@/types/quiz";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { costumeDatabase } from "@/data/costumeDatabase";
+import costumeDatabase from "@/data/costumeDatabase";
 
 type Stage = 'welcome' | 'quiz' | 'loading' | 'results' | 'detail';
 
