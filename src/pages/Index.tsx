@@ -20,6 +20,7 @@ const Index = () => {
   const [selectedCostume, setSelectedCostume] = useState<CostumeRecommendation | null>(null);
   const [costumeGuide, setCostumeGuide] = useState<ImplementationGuide | null>(null);
   const [isLoadingGuide, setIsLoadingGuide] = useState(false);
+  const [loadingType, setLoadingType] = useState<'costumes' | 'guide'>('costumes');
 
   const handleStartQuiz = () => {
     setStage('quiz');
@@ -28,6 +29,7 @@ const Index = () => {
   const handleQuizComplete = async (answers: QuizAnswers) => {
     setQuizAnswers(answers);
     setStage('loading');
+    setLoadingType('costumes');
     
     try {
       const previousNames = recommendations.map(r => r.name);
@@ -118,6 +120,7 @@ const Index = () => {
     setSelectedCostume(costume);
     setIsLoadingGuide(true);
     setStage('loading');
+    setLoadingType('guide');
 
     try {
       const { data, error } = await supabase.functions.invoke('generate-guide', {
@@ -172,7 +175,15 @@ const Index = () => {
     <>
       {stage === 'welcome' && <WelcomeScreen onStart={handleStartQuiz} />}
       {stage === 'quiz' && <QuizScreen onComplete={handleQuizComplete} onBack={handleBackToWelcome} />}
-      {stage === 'loading' && <LoadingScreen />}
+      {stage === 'loading' && (
+        <LoadingScreen 
+          title={loadingType === 'costumes' ? "Conjuring Your Perfect Costumes..." : "Crafting Your Implementation Guide..."}
+          description={loadingType === 'costumes' 
+            ? "Our AI is analyzing your interests to find character-perfect matches"
+            : "Creating a detailed step-by-step guide tailored to your costume"}
+          timeEstimate={loadingType === 'costumes' ? "This usually takes 5-10 seconds..." : "This usually takes 3-5 seconds..."}
+        />
+      )}
       {stage === 'results' && (
         <ResultsScreen
           recommendations={recommendations}

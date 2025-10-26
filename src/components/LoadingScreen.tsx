@@ -1,6 +1,16 @@
 import { Ghost, Sparkles, Wand2 } from "lucide-react";
 
-export const LoadingScreen = () => {
+interface LoadingScreenProps {
+  title?: string;
+  description?: string;
+  timeEstimate?: string;
+}
+
+export const LoadingScreen = ({ 
+  title = "Conjuring Your Perfect Costumes...",
+  description = "Our AI is analyzing your interests to find character-perfect matches",
+  timeEstimate = "This usually takes 5-10 seconds..."
+}: LoadingScreenProps) => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="text-center space-y-8 max-w-md">
@@ -12,10 +22,10 @@ export const LoadingScreen = () => {
 
         <div className="space-y-4">
           <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-            Conjuring Your Perfect Costumes...
+            {title}
           </h2>
           <p className="text-muted-foreground text-lg">
-            Our AI is analyzing your interests to find character-perfect matches
+            {description}
           </p>
         </div>
 
@@ -24,7 +34,7 @@ export const LoadingScreen = () => {
             <div className="h-full bg-gradient-to-r from-primary via-secondary to-accent animate-pulse w-full" />
           </div>
           <p className="text-sm text-muted-foreground animate-pulse">
-            This usually takes 5-10 seconds...
+            {timeEstimate}
           </p>
         </div>
       </div>
