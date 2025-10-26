@@ -72,7 +72,7 @@ SpookFit uses AI to provide **personalized, character-specific Halloween costume
 - Filter by saved costumes
 - Responsive mobile-first design
 
-## 🏗️ Technical Architecture
+##  Technical Architecture
 
 ### Frontend
 - **React 18** with TypeScript
