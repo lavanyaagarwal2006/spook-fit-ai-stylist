@@ -2,6 +2,17 @@ import { QuizQuestion } from "@/types/quiz";
 
 export const quizQuestions: QuizQuestion[] = [
   {
+    id: 'gender',
+    question: "What gender do you identify as?",
+    type: 'single',
+    options: [
+      { value: 'male', label: 'Male', emoji: '👨' },
+      { value: 'female', label: 'Female', emoji: '👩' },
+      { value: 'non-binary', label: 'Non-binary', emoji: '🧑' },
+      { value: 'any', label: 'Any/All options', emoji: '✨' }
+    ]
+  },
+  {
     id: 'style',
     question: "What's your Halloween vibe?",
     type: 'multi-select',
